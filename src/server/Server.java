@@ -48,10 +48,11 @@ public class Server extends Thread
 	private void waitConnections() throws IOException
 	{
 		connection = serverSocket.accept();
-		// displayOnScreen("New connection received from: "+connection.getInetAddress().toString()+" ("+connection.getInetAddress().getHostName()+")");
+		// System.out.println("New connection received from: "+connection.getInetAddress().toString()+" ("+connection.getInetAddress().getHostName()+")");
 		connections++;
 	}
 	
+	// Obtenemos los flujos de la conexión
 	private void getStreams() throws IOException
 	{
 		output = new ObjectOutputStream(connection.getOutputStream());
