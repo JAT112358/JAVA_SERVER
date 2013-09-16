@@ -1,73 +1,56 @@
 package display;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 
-import javax.swing.JTextArea;
+import javax.swing.JList;
 
-import org.hyperic.sigar.CpuInfo;
 import org.hyperic.sigar.CpuPerc;
-import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
 
-import utils.Properties;
+import utils.SystemResources;
 
 import components.IPanel;
 
 /**
  * @author Jordan Aranda Tejada
  */
-public class InformationPanel extends IPanel {
+public class InformationPanel extends IPanel implements Runnable {
 
 	private static final long	serialVersionUID	= - 8580797369160111257L;
-	private boolean				running;
-	private JTextArea			textArea;
-	private Sigar				sigar;
+	private JList<String>		listSystemResources;
 
+	/**
+	 * Panel with system resources information
+	 */
 	public InformationPanel()
 	{
-		this.running = true;
 		setLayout(new BorderLayout(0, 0));
 
-		textArea = new JTextArea();
-		add(textArea, BorderLayout.CENTER);
-
-		setVisible(true);
+		listSystemResources = new JList<String>();
+		listSystemResources.setRequestFocusEnabled(false);
+		listSystemResources.setFocusable(false);
+		listSystemResources
+		.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 12));
+		listSystemResources.setOpaque(false);
+		add(listSystemResources, BorderLayout.CENTER);
 	}
 
+	@Override
 	public void run()
 	{
 		while (true)
 		{
-			if (running)
+			String[] consumeCPU = new String[SystemResources
+			.getSystemCPUCores() + 1];
+			double[] consumeCPUvalues = SystemResources.getSystemCPUConsume();
+			for (int i = 0; i < SystemResources.getSystemCPUCores(); i++)
 			{
-				System.out.println("Entra");
-				try
-				{
-					Thread.sleep(Properties.getUpdateTime() * 1000);
-					sigar = new Sigar();
-					CpuInfo[] infos = null;
-					CpuPerc[] cpus = null;
-					try
-					{
-						infos = sigar.getCpuInfoList();
-						cpus = sigar.getCpuPercList();
-					}
-					catch (SigarException e)
-					{
-						e.printStackTrace();
-					}
-					CpuInfo info = infos[0];
-					textArea.setText("Total CPUs\t\t" + info.getTotalCores());
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
+				consumeCPU[i] = "Consumo CPU " + (i + 1) + "                "
+				+ CpuPerc.format(consumeCPUvalues[i]);
 			}
-			else
-			{
-				setVisible(false);
-			}
+			consumeCPU[SystemResources.getSystemCPUCores()] = "Consumo total de CPU     "
+			+ CpuPerc.format(SystemResources.getSystemCPUTotalConsume());
+			listSystemResources.setListData(consumeCPU);
 		}
 	}
 }

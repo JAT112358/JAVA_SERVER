@@ -1,6 +1,5 @@
 package display;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -32,6 +31,8 @@ public class Start extends JPanel {
 	private ConsolePanel		console_panel;
 	private ConnectedUsersPanel	users_panel;
 
+	private Thread				information_thread;
+
 	private boolean				databaseWindowOpened;
 	private boolean				usersWindowOpened;
 
@@ -59,7 +60,7 @@ public class Start extends JPanel {
 		add(panel_izquierdo, gbc_panel_izquierdo);
 		GridBagLayout gbl_panel_izquierdo = new GridBagLayout();
 		gbl_panel_izquierdo.columnWidths = new int[] {0, 0};
-		gbl_panel_izquierdo.rowHeights = new int[] {120, 160, 0, 0};
+		gbl_panel_izquierdo.rowHeights = new int[] {120, 200, 0, 0};
 		gbl_panel_izquierdo.columnWeights = new double[] {1.0, Double.MIN_VALUE};
 		gbl_panel_izquierdo.rowWeights = new double[] {0.0, 0.0, 1.0,
 		Double.MIN_VALUE};
@@ -84,7 +85,8 @@ public class Start extends JPanel {
 		gbc_panel_sistema.gridx = 0;
 		gbc_panel_sistema.gridy = 1;
 		panel_izquierdo.add(system_panel, gbc_panel_sistema);
-		system_panel.setLayout(new BorderLayout(0, 0));
+		information_thread = new Thread(system_panel);
+		information_thread.start();
 
 		// PANEL DE USUARIOS
 		users_panel = new ConnectedUsersPanel();
