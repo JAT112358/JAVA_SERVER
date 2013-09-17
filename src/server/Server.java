@@ -151,7 +151,7 @@ public class Server extends Thread {
 			{
 				if (running)
 				{
-					System.out.println(Utilities.getDateAndTime());
+					System.out.println(Utilities.getDateAndTimeString());
 					try
 					{
 						waitConnections();
