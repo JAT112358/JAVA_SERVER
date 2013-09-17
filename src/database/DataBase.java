@@ -42,6 +42,9 @@ public class DataBase {
 		}
 	}
 
+	/**
+	 * Disconnect database
+	 */
 	public void disconnect()
 	{
 		try
@@ -81,6 +84,10 @@ public class DataBase {
 		return statement;
 	}
 
+	/**
+	 * @param consult The consult to database
+	 * @return resultSet with the data of database
+	 */
 	public ResultSet consult(String consult)
 	{
 		Statement statement = this.create_statement();
@@ -95,6 +102,11 @@ public class DataBase {
 		}
 	}
 
+	/**
+	 * @param consult The consult to database
+	 * @return either (1) the row count for SQL Data Manipulation Language (DML)
+	 *         statements or (2) 0 for SQL statements that return nothing
+	 */
 	public int update(String consult)
 	{
 		Statement statement = this.create_statement();
@@ -109,6 +121,11 @@ public class DataBase {
 		}
 	}
 
+	/**
+	 * @param table The table
+	 * @param condition The condition
+	 * @return The number of rows
+	 */
 	public int count(String table, String condition)
 	{
 		int number = 0;
@@ -135,26 +152,12 @@ public class DataBase {
 		return count("sqlite_master", "type='table'");
 	}
 
-	public boolean exist(String table, String condition)
-	{
-		boolean enc = false;
-		String where = condition == null ? "" : " WHERE " + condition;
-		String consult = "SELECT * FROM " + table + where + ";";
-		ResultSet result = consult(consult);
-		try
-		{
-			while (result.next())
-			{
-				enc = true;
-			}
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Error checking table.");
-		}
-		return enc;
-	}
-
+	/**
+	 * @param table The table
+	 * @param columnName The column
+	 * @param condition The condition
+	 * @return The first available id in ascendent
+	 */
 	public int getFirstIdAvailable(String table, String columnName,
 	String condition)
 	{

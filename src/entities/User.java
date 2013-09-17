@@ -170,8 +170,8 @@ public class User {
 
 	public static boolean exist(final String name)
 	{
-		return DataBase.getInstance().exist(Properties.getTableUsersName(),
-		"NAME='" + name + "'");
+		return DataBase.getInstance().count(Properties.getTableUsersName(),
+		"NAME='" + name + "'") == 1;
 	}
 
 	public static Vector<User> getUsersVector()
@@ -367,8 +367,9 @@ public class User {
 	public static void main(String[] args)
 	{
 		System.out.println("INICIO");
-		createUser("Jordan", "jordan.aranda@me.com", "1234", "Hola?", "Adios!",
-		true);
+		// createUser("Jordan", "jordan.aranda@me.com", "1234", "Hola?",
+		// "Adios!",
+		// true);
 		System.out.println("FIN");
 	}
 }
