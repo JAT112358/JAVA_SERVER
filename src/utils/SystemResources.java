@@ -6,6 +6,7 @@ import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.OperatingSystem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
+import org.hyperic.sigar.Swap;
 
 /**
  * @author Jordan Aranda Tejada
@@ -17,6 +18,7 @@ public class SystemResources {
 	private static CpuInfo[]		infoCPU;
 	private static CpuPerc[]		cpus;
 	private static Mem				memory;
+	private static Swap				swap;
 
 	private static void init()
 	{
@@ -24,12 +26,14 @@ public class SystemResources {
 		infoCPU = null;
 		cpus = null;
 		memory = null;
+		swap = null;
 		sys = OperatingSystem.getInstance();
 		try
 		{
 			infoCPU = sigar.getCpuInfoList();
 			cpus = sigar.getCpuPercList();
 			memory = sigar.getMem();
+			swap = sigar.getSwap();
 		}
 		catch (SigarException e)
 		{
@@ -178,6 +182,127 @@ public class SystemResources {
 	}
 
 	/**
+	 * @return System RAM
+	 */
+	public static double getSystemRAMMemory()
+	{
+		if (memory == null)
+		{
+			init();
+		}
+		return memory.getRam();
+	}
+
+	/**
+	 * @return System RAM in bytes
+	 */
+	public static long getSystemTotalMemory()
+	{
+		if (memory == null)
+		{
+			init();
+		}
+		return toBytes(memory.getRam());
+	}
+
+	/**
+	 * @return System used memory in bytes
+	 */
+	public static long getSystemUsedMemory()
+	{
+		if (memory == null)
+		{
+			init();
+		}
+		return toBytes(memory.getActualUsed());
+	}
+
+	/**
+	 * @return System free memory in bytes
+	 */
+	public static long getSystemFreeMemory()
+	{
+		if (memory == null)
+		{
+			init();
+		}
+		return toBytes(memory.getActualFree());
+	}
+
+	/**
+	 * @return System total swap memory in bytes
+	 */
+	public static long getSystemTotalSwapMemory()
+	{
+		if (swap == null)
+		{
+			init();
+		}
+		return toBytes(swap.getTotal());
+	}
+
+	/**
+	 * @return System used swap memory in bytes
+	 */
+	public static long getSystemUsedSwapMemory()
+	{
+		if (swap == null)
+		{
+			init();
+		}
+		return toBytes(swap.getUsed());
+	}
+
+	/**
+	 * @return System free swap memory in bytes
+	 */
+	public static long getSystemFreeSwapMemory()
+	{
+		if (swap == null)
+		{
+			init();
+		}
+		return toBytes(swap.getFree());
+	}
+
+	private static Long toBytes(long value)
+	{
+		return new Long(value / 1024);
+	}
+
+	/**
+	 * @return The uptime in array (0-days, 1-hours, 2-minutes, 3-seconds)
+	 */
+	public static int[] getUptime()
+	{
+		int[] time = new int[4];
+		double uptime = 0;
+		try
+		{
+			uptime = sigar.getUptime().getUptime();
+		}
+		catch (SigarException e)
+		{
+			e.printStackTrace();
+		}
+
+		int days = (int) uptime / (60 * 60 * 24);
+		int seconds, minutes, hours;
+		minutes = (int) uptime / 60;
+		hours = minutes / 60;
+		hours %= 24;
+		minutes %= 60;
+		seconds = (int) (uptime % 60);
+
+		time[0] = days;
+		time[1] = hours;
+		time[2] = minutes;
+		time[3] = seconds;
+
+		return time;
+	}
+
+	/**
 	 * @param args Arguments
 	 */
 	public static void main(String ... args)
@@ -201,5 +326,11 @@ public class SystemResources {
 		}
 		System.out.println("Consumo total CPU: "
 		+ SystemResources.getSystemCPUTotalConsume());
+
+		System.out.println("Tiempo encendido: "
+		+ SystemResources.getUptime()[0] + " dias, "
+		+ SystemResources.getUptime()[1] + " horas, "
+		+ SystemResources.getUptime()[2] + " minutos,"
+		+ SystemResources.getUptime()[3] + " segundos");
 	}
 }
