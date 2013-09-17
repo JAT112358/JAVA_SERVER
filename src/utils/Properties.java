@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Locale;
+
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -15,27 +16,27 @@ import javax.swing.UIManager.LookAndFeelInfo;
  * @author Jordan Aranda Tejada
  */
 
-public class Properties implements Serializable
-{
-	private static final long serialVersionUID = 4780308659003926926L;
+public class Properties implements Serializable {
+
+	private static final long	serialVersionUID	= 4780308659003926926L;
 
 	private static Properties	properties;
-	
-	private String 				serverIP;
-	private int 				serverPORT;
+
+	private String				serverIP;
+	private int					serverPORT;
 	private String				tableUsersName;
-	private int 				maxUsersConnected;
+	private int					maxUsersConnected;
 	private int					totalUsers;
 	private int					updateTime;
 	private String				dataBasePath;
 	private boolean				logFile;
-	private Locale 				locale;
+	private Locale				locale;
 	private String				lookAndFeelClass;
 	private String				version;
-	
-	private Properties(String serverIP, int serverPORT, String tableUsersName, 
-			int maxUsersConnected, int totalUsers, int updateTime, String dataBasePath, 
-			boolean logFile, Locale locale, String lookAndFeelClass, String version) 
+
+	private Properties(String serverIP, int serverPORT, String tableUsersName,
+	int maxUsersConnected, int totalUsers, int updateTime, String dataBasePath,
+	boolean logFile, Locale locale, String lookAndFeelClass, String version)
 	{
 		this.serverIP = serverIP;
 		this.serverPORT = serverPORT;
@@ -49,22 +50,23 @@ public class Properties implements Serializable
 		this.lookAndFeelClass = lookAndFeelClass;
 		this.version = version;
 	}
-	
+
 	private void update()
 	{
 		ObjectOutputStream oos;
 		try
 		{
-			oos = new ObjectOutputStream(new FileOutputStream("data/config.properties"));
+			oos = new ObjectOutputStream(new FileOutputStream(
+			"data/config.properties"));
 			oos.writeObject(properties);
 			oos.close();
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
-			properties = new Properties("25.9.212.247", 5000, "USERS", 10, 50, 1, 
-						"data/autoescuela.sqlite3", true, Locale.getDefault(), 
-						UIManager.getSystemLookAndFeelClassName(), "1.0");
+			properties = new Properties("25.9.212.247", 5000, "USERS", 10, 50,
+			1, "data/autoescuela.sqlite3", true, Locale.getDefault(),
+			UIManager.getSystemLookAndFeelClassName(), "1.0");
 		}
 	}
 
@@ -73,7 +75,8 @@ public class Properties implements Serializable
 		ObjectInputStream ois;
 		try
 		{
-			ois = new ObjectInputStream(new FileInputStream("data/config.properties"));
+			ois = new ObjectInputStream(new FileInputStream(
+			"data/config.properties"));
 			properties = (Properties) ois.readObject();
 			ois.close();
 		}
@@ -84,13 +87,13 @@ public class Properties implements Serializable
 				e.printStackTrace();
 			}
 
-			properties = new Properties("25.9.212.247", 5000, "USERS", 10, 50, 1, 
-						"data/autoescuela.sqlite3", true, Locale.getDefault(), 
-						UIManager.getSystemLookAndFeelClassName(), "1.0");
+			properties = new Properties("25.9.212.247", 5000, "USERS", 10, 50,
+			1, "data/autoescuela.sqlite3", true, Locale.getDefault(),
+			UIManager.getSystemLookAndFeelClassName(), "1.0");
 			properties.update();
 		}
 	}
-	
+
 	/**
 	 * @return Server IP
 	 */
@@ -103,7 +106,7 @@ public class Properties implements Serializable
 
 		return properties.serverIP;
 	}
-	
+
 	/**
 	 * @param IP New server IP
 	 */
@@ -117,7 +120,7 @@ public class Properties implements Serializable
 		properties.serverIP = IP;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Server PORT
 	 */
@@ -130,9 +133,9 @@ public class Properties implements Serializable
 
 		return properties.serverPORT;
 	}
-	
+
 	/**
-	 * @param IP New server PORT
+	 * @param PORT New server PORT
 	 */
 	public static void setServerPORT(final int PORT)
 	{
@@ -144,7 +147,7 @@ public class Properties implements Serializable
 		properties.serverPORT = PORT;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Table users name
 	 */
@@ -157,9 +160,9 @@ public class Properties implements Serializable
 
 		return properties.tableUsersName;
 	}
-	
+
 	/**
-	 * @param New table users name
+	 * @param tableUsersName New table users name
 	 */
 	public static void setTableUsersName(final String tableUsersName)
 	{
@@ -171,7 +174,7 @@ public class Properties implements Serializable
 		properties.tableUsersName = tableUsersName;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Max users connected
 	 */
@@ -184,9 +187,9 @@ public class Properties implements Serializable
 
 		return properties.maxUsersConnected;
 	}
-	
+
 	/**
-	 * @param New max users connected value
+	 * @param maxUsersConnected New max users connected value
 	 */
 	public static void setMaxUsersConnected(final int maxUsersConnected)
 	{
@@ -198,7 +201,7 @@ public class Properties implements Serializable
 		properties.maxUsersConnected = maxUsersConnected;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Total users
 	 */
@@ -211,9 +214,9 @@ public class Properties implements Serializable
 
 		return properties.totalUsers;
 	}
-	
+
 	/**
-	 * @param New total users value
+	 * @param totalUsers New total users value
 	 */
 	public static void setTotalUsers(final int totalUsers)
 	{
@@ -224,8 +227,8 @@ public class Properties implements Serializable
 
 		properties.totalUsers = totalUsers;
 		properties.update();
-	}	
-	
+	}
+
 	/**
 	 * @return Update time
 	 */
@@ -238,9 +241,9 @@ public class Properties implements Serializable
 
 		return properties.updateTime;
 	}
-	
+
 	/**
-	 * @param New update time value
+	 * @param updateTime New update time value
 	 */
 	public static void setUpdateTime(final int updateTime)
 	{
@@ -252,7 +255,7 @@ public class Properties implements Serializable
 		properties.updateTime = updateTime;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Database path
 	 */
@@ -265,9 +268,9 @@ public class Properties implements Serializable
 
 		return properties.dataBasePath;
 	}
-	
+
 	/**
-	 * @param New database path
+	 * @param dataBasePath New database path
 	 */
 	public static void setDataBasePath(final String dataBasePath)
 	{
@@ -279,7 +282,7 @@ public class Properties implements Serializable
 		properties.dataBasePath = dataBasePath;
 		properties.update();
 	}
-	
+
 	/**
 	 * @return If log file is enable
 	 */
@@ -292,9 +295,9 @@ public class Properties implements Serializable
 
 		return properties.logFile;
 	}
-	
+
 	/**
-	 * @param Logfile enable (true)
+	 * @param logFile Enables logfile (true)
 	 */
 	public static void setLogFileEnable(final boolean logFile)
 	{
@@ -306,7 +309,7 @@ public class Properties implements Serializable
 		properties.logFile = logFile;
 		properties.update();
 	}
-		
+
 	/**
 	 * @return Current locale
 	 */
@@ -341,7 +344,7 @@ public class Properties implements Serializable
 
 		properties.update();
 	}
-		
+
 	/**
 	 * @return Current look and feel
 	 */
@@ -354,7 +357,7 @@ public class Properties implements Serializable
 
 		return properties.lookAndFeelClass;
 	}
-	
+
 	/**
 	 * @param lf The new Look and feel to set
 	 */
@@ -371,7 +374,7 @@ public class Properties implements Serializable
 		}
 		properties.update();
 	}
-	
+
 	/**
 	 * @return Version of application
 	 */
@@ -384,9 +387,9 @@ public class Properties implements Serializable
 
 		return properties.version;
 	}
-	
+
 	/**
-	 * @param New version of application
+	 * @param version New version of application
 	 */
 	public static void setVersion(final String version)
 	{
@@ -399,7 +402,7 @@ public class Properties implements Serializable
 
 		properties.update();
 	}
-	
+
 	private static boolean isLFAvailable(final String lf)
 	{
 		final LookAndFeelInfo lfs[] = UIManager.getInstalledLookAndFeels();
@@ -412,17 +415,20 @@ public class Properties implements Serializable
 		}
 		return false;
 	}
-	
-	public static void main (String [] args)
+
+	/**
+	 * @param args Arguments
+	 */
+	public static void main(String[] args)
 	{
 		System.out.println("LECTURA DE DATOS");
-		System.out.println("IP = "+Properties.getServerIP());
-		System.out.println("PORT = "+Properties.getServerPORT());
-		System.out.println("LANGUAGE = "+Properties.getLocale().toString());
-		System.out.println("VERSION = "+Properties.getVersion());	
+		System.out.println("IP = " + Properties.getServerIP());
+		System.out.println("PORT = " + Properties.getServerPORT());
+		System.out.println("LANGUAGE = " + Properties.getLocale().toString());
+		System.out.println("VERSION = " + Properties.getVersion());
 		System.out.println("\nMODIFICACION DE DATOS");
-		
+
 		Properties.setServerIP("192.168.1.39");
-		
+
 	}
 }

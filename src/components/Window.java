@@ -4,6 +4,7 @@ import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
 import utils.Lang;
 import utils.Properties;
 
@@ -11,8 +12,8 @@ import utils.Properties;
  * @author Jordan Aranda Tejada
  */
 
-public class Window extends JFrame implements Internationalizable
-{
+public class Window extends JFrame implements Internationalizable {
+
 	private static final long	serialVersionUID	= - 8641413596663241575L;
 	private static Window		instance;
 
@@ -27,6 +28,9 @@ public class Window extends JFrame implements Internationalizable
 		Lang.setLine(this, "main_window_title");
 	}
 
+	/**
+	 * @return instance of the window
+	 */
 	public static Window getInstance()
 	{
 		if (instance == null)
@@ -37,8 +41,8 @@ public class Window extends JFrame implements Internationalizable
 	}
 
 	@Override
-	public void changeLanguage(String newText) 
+	public void changeLanguage(String newText)
 	{
-		setTitle(newText+" " + Properties.getVersion() + "]");
+		setTitle(newText + " " + Properties.getVersion() + "]");
 	}
 }

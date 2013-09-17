@@ -14,8 +14,8 @@ import utils.Properties;
 /**
  * @author Jordan Aranda Tejada
  */
-public class DataBase
-{
+public class DataBase {
+
 	private static DataBase	instance;
 	private Connection		connection;
 
@@ -24,12 +24,15 @@ public class DataBase
 		try
 		{
 			Class.forName("org.sqlite.JDBC");
-			this.connection = DriverManager.getConnection("jdbc:sqlite:"+Properties.getDataBasePath());
+			this.connection = DriverManager.getConnection("jdbc:sqlite:"
+			+ Properties.getDataBasePath());
 			this.update("PRAGMA encoding = \"UTF-8\";");
-		} catch (ClassNotFoundException e)
+		}
+		catch (ClassNotFoundException e)
 		{
 			e.printStackTrace();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
@@ -44,18 +47,20 @@ public class DataBase
 		try
 		{
 			connection.close();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void create_tables()
 	{
 		try
 		{
 			this.update(FileUtils.toString("data/createDB.sql"));
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -68,7 +73,8 @@ public class DataBase
 		try
 		{
 			statement = this.connection.createStatement();
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			System.out.println("Error creating statement.");
 		}
@@ -81,7 +87,8 @@ public class DataBase
 		try
 		{
 			return statement.executeQuery(consult);
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			System.out.println("Error consulting database.");
 			return null;
@@ -94,9 +101,10 @@ public class DataBase
 		try
 		{
 			return statement.executeUpdate(consult);
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
-			System.out.println("Error updating database.\n "+e.toString());
+			System.out.println("Error updating database.\n " + e.toString());
 			return 0;
 		}
 	}
@@ -105,7 +113,8 @@ public class DataBase
 	{
 		int number = 0;
 		String where = condition == null ? "" : " WHERE " + condition;
-		String consult = "SELECT COUNT(*) as number FROM " + table + where + ";";
+		String consult = "SELECT COUNT(*) as number FROM " + table + where
+		+ ";";
 		ResultSet result = consult(consult);
 		try
 		{
@@ -113,19 +122,20 @@ public class DataBase
 			{
 				number = result.getInt("number");
 			}
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			System.out.println("Error counting tables.");
 		}
 		return number;
 	}
-	
+
 	private int numberOfTables()
 	{
 		return count("sqlite_master", "type='table'");
 	}
-	
-	public boolean exist (String table, String condition)
+
+	public boolean exist(String table, String condition)
 	{
 		boolean enc = false;
 		String where = condition == null ? "" : " WHERE " + condition;
@@ -137,36 +147,46 @@ public class DataBase
 			{
 				enc = true;
 			}
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			System.out.println("Error checking table.");
 		}
 		return enc;
 	}
-	
-	public int getFirstIdAvailable(String table, String columnName, String condition)
+
+	public int getFirstIdAvailable(String table, String columnName,
+	String condition)
 	{
 		int id = 1;
 		boolean enc = false;
 		String where = condition == null ? "" : " WHERE " + condition;
-		ResultSet rs = DataBase.getInstance().consult("SELECT " + columnName + " FROM " + table + where + ";");
-		try {
-			while(rs.next() && !enc)
+		ResultSet rs = DataBase.getInstance().consult(
+		"SELECT " + columnName + " FROM " + table + where + ";");
+		try
+		{
+			while (rs.next() && ! enc)
 			{
-				if(id != rs.getInt(columnName))
+				if (id != rs.getInt(columnName))
 				{
 					enc = true;
-				} else {
+				}
+				else
+				{
 					id++;
 				}
 			}
-		} catch (SQLException e) 
+		}
+		catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 		return id;
 	}
-	
+
+	/**
+	 * @return instance of database
+	 */
 	public static DataBase getInstance()
 	{
 		if (instance == null)
@@ -176,8 +196,11 @@ public class DataBase
 		return instance;
 	}
 
+	/**
+	 * @param args Arguments
+	 */
 	public static void main(String[] args)
 	{
-		DataBase.getInstance().update("UPDATE USERS SET CONNECTED=1 WHERE ID=2");
+		DataBase.getInstance().update("DELETE FROM USERS WHERE ID=2");
 	}
 }

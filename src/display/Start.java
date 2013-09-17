@@ -36,6 +36,9 @@ public class Start extends JPanel {
 	private boolean				databaseWindowOpened;
 	private boolean				usersWindowOpened;
 
+	/**
+	 * The start panel
+	 */
 	public Start()
 	{
 		// this.server = new Server();
@@ -178,6 +181,9 @@ public class Start extends JPanel {
 		this.system_panel = system_panel;
 	}
 
+	/**
+	 * @param args Arguments
+	 */
 	public static void main(String[] args)
 	{
 		try
