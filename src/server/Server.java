@@ -12,17 +12,13 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 import utils.Properties;
-import utils.Utilities;
 import database.DataBase;
-import display.Start;
 import entities.Request;
 
 /**
  * @author Jordan Aranda Tejada
  */
-public class Server extends Thread {
-
-	private static final long	serialVersionUID	= - 1179972024976757876L;
+public class Server implements Runnable {
 
 	private boolean				running;
 	private ServerSocket		serverSocket;
@@ -30,8 +26,10 @@ public class Server extends Thread {
 	private ObjectOutputStream	output;
 	private ObjectInputStream	input;
 	private long				connections;
-	private Start				mainPanel;
 
+	/**
+	 * Creates the server
+	 */
 	public Server()
 	{
 		this.connections = 0;
@@ -145,50 +143,40 @@ public class Server extends Thread {
 	@Override
 	public void run()
 	{
-		while (true)
+		while (running)
 		{
+
 			try
 			{
-				if (running)
-				{
-					System.out.println(Utilities.getDateAndTimeString());
-					try
-					{
-						waitConnections();
-						getStreams();
-						processConnection();
-					}
-					catch (EOFException excepcionEOF)
-					{
-						JOptionPane.showMessageDialog(null,
-						"The server finished the connection.",
-						"Connection finished", JOptionPane.INFORMATION_MESSAGE);
-					}
-					finally
-					{
-						closeConnection();
-					}
-				}
+				waitConnections();
+				getStreams();
+				processConnection();
 			}
-			catch (IOException excepcionES)
+			catch (EOFException excepcionEOF)
 			{
-				excepcionES.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+				"The server finished the connection.", "Connection finished",
+				JOptionPane.INFORMATION_MESSAGE);
 			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				closeConnection();
+			}
+
 		}
 	}
 
-	public boolean isRunning()
-	{
-		return running;
-	}
-
-	public void setRunning(boolean running)
-	{
-		this.running = running;
-	}
-
+	/**
+	 * @param args Arguments
+	 */
 	public static void main(String ... args)
 	{
 		Server server = new Server();
+		Thread server_thread = new Thread(server);
+		server_thread.run();
 	}
 }
