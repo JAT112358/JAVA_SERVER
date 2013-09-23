@@ -40,10 +40,10 @@ public class Server implements Runnable {
 
 	private void waitConnections() throws IOException
 	{
-		connectionsThreads.add(new Thread(new ServerThread(serverSocket
-		.accept())));
-		connectionsThreads.get(connectionsThreads.size()).start();
-
+		Thread serverThread = new Thread(
+		new ServerThread(serverSocket.accept()));
+		connectionsThreads.add(serverThread);
+		serverThread.start();
 		// System.out.println("New connection received from: "+connection.getInetAddress().toString()+" ("+connection.getInetAddress().getHostName()+")");
 	}
 

@@ -20,10 +20,10 @@ public class ServerThread implements Runnable {
 	public ServerThread(Socket socket)
 	{
 		this.socket = socket;
-		InicializaStreams();
+		InicializateStreams();
 	}
 
-	private void InicializaStreams()
+	private void InicializateStreams()
 	{
 		try
 		{
